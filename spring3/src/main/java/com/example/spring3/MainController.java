@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class MainController {
     private LoggedUserManagementService loggedUserManagementService;
+    private LoginCountService loginCountService;
 
-    public MainController(LoggedUserManagementService loggedUserManagementService){
+    public MainController(LoggedUserManagementService loggedUserManagementService,
+                          LoginCountService loginCountService){
         this.loggedUserManagementService = loggedUserManagementService;
+        this.loginCountService = loginCountService;
     }
 
     @GetMapping("/main")
@@ -22,11 +25,14 @@ public class MainController {
         }
 
         String username = loggedUserManagementService.getUsername();
+        int count = loginCountService.getCount();
+
         if (username==null){
             return "redirect:/";
         }
         else{
             model.addAttribute("username", username);
+            model.addAttribute("loginCount", count);
             return "main.html";
         }
     }
