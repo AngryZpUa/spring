@@ -2,11 +2,9 @@ package org.example;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
 import java.util.logging.Logger;
 
 @RestController
@@ -32,5 +30,15 @@ public class PaymentController {
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
                 .body(paymentDetails);
+    }
+
+    @PostMapping("/createpayment")
+    public ResponseEntity<Payment> createPayment(@RequestHeader String requestId, @RequestBody Payment payment){
+        logger.info("Recieved request with ID " + requestId + "; Payments amount: " + payment.getAmount());
+        payment.setId(UUID.randomUUID().toString());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .header("reauestId", requestId)
+                .body(payment);
     }
 }
